@@ -17,8 +17,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -105,6 +106,11 @@ android {
     }
 }
 
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+}
+
 dependencies {
     implementation(libs.androidx.tracing)
     implementation(project(":core:common"))
@@ -135,7 +141,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.rules)
     androidTestImplementation(libs.androidx.uiautomator)
     androidTestImplementation(libs.truth)
 
@@ -144,7 +150,7 @@ dependencies {
 
     // Hilt
     implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     // Accompanist - Permissions
     implementation(libs.accompanist.permissions)
@@ -167,9 +173,4 @@ dependencies {
     // benchmark
     implementation(libs.androidx.profileinstaller)
 
-}
-
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
 }

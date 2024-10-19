@@ -17,9 +17,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.google.protobuf)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -34,6 +35,19 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    packagingOptions {
+        resources.pickFirsts.add("**.proto")
+    }
+
+    sourceSets {
+        getByName("debug") {
+            resources.srcDirs("build/generated/ksp/debug/resources")
+        }
+        getByName("release") {
+            resources.srcDirs("build/generated/ksp/release/resources")
+        }
     }
 
     flavorDimensions += "flavor"
@@ -80,11 +94,13 @@ dependencies {
 
     // Hilt
     implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     // proto datastore
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
+    implementation(libs.protobuf.generate)
+    ksp(libs.protobuf.generate)
 
     // Testing
     testImplementation(libs.junit)
@@ -97,7 +113,7 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.21.12"
+        artifact = "com.google.protobuf:protoc:4.28.2"
     }
 
     generateProtoTasks {
@@ -117,7 +133,3 @@ protobuf {
     }
 }
 
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
-}

@@ -17,7 +17,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.dagger.hilt.android)
 }
 
@@ -116,7 +116,7 @@ dependencies {
 
     // Hilt
     implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     // Tracing
     implementation(libs.androidx.tracing)
@@ -130,7 +130,3 @@ dependencies {
     implementation(project(":core:common"))
 }
 
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
-}

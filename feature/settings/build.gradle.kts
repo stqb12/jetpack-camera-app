@@ -17,8 +17,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -80,6 +81,11 @@ android {
     }
 }
 
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+}
+
 dependencies {
     // Compose
     val composeBom = platform(libs.compose.bom)
@@ -114,16 +120,11 @@ dependencies {
 
     // Hilt
     implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     // Proto Datastore
     implementation(libs.androidx.datastore)
     implementation(libs.protobuf.kotlin.lite)
 
     implementation(project(":data:settings"))
-}
-
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
 }

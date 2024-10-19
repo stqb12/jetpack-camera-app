@@ -149,7 +149,7 @@ class CameraXCameraUseCaseTest {
         constraintsRepository: SettableConstraintsRepository = SettableConstraintsRepositoryImpl()
     ) = CameraXCameraUseCase(
         application,
-        useCaseScope,
+        Dispatchers.Default,
         Dispatchers.Default,
         constraintsRepository
     ).apply {
